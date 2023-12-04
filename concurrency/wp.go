@@ -8,14 +8,13 @@ func main() {
 	jobs := make(chan int, len(tasks))
 	results := make(chan int, len(tasks))
 
-	for i := 0; i < nWorkers; i++ {
-		go Worker(i, jobs, results)
-	}
-
 	for _, value := range tasks {
 		jobs <- value
 	}
 	close(jobs)
+	for i := 0; i < nWorkers; i++ {
+		go Worker(i, jobs, results)
+	}
 
 	for r := 0; r < len(tasks); r++ {
 		<-results
